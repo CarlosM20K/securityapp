@@ -5,10 +5,14 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
 jobs:
   security-check:
     runs-on: ubuntu-latest
+
+  # ============ JOB 2: BUILD ============
+    build:
+    runs-on: ubuntu-latest
+    needs: test-and-security
 
     services:
       mysql:
@@ -51,6 +55,11 @@ jobs:
         run: cp .env.example .env
       - name: Generate Laravel key
         run: php artisan key:generate
+
+  # ============ JOB 2: BUILD ============
+     build:
+     runs-on: ubuntu-latest
+     needs: test-and-security
 
       # Correr Laravel tests
       - name: Run Laravel automated tests
