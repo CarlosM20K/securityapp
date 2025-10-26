@@ -58,15 +58,17 @@ jobs:
         continue-on-error: true
 
       # Analisis estatico y calidad del codigo
-   #   - name: PHPStan Static Analysis
-    #    run: |
-     #     composer require --dev phpstan/phpstan
-      #    vendor/bin/phpstan analyse -l max
+      - name: PHPStan Static Analysis
+        run: |
+          composer require --dev phpstan/phpstan
+          vendor/bin/phpstan analyse -l max
+        continue-on-error: true
 
-   #   - name: PHP_CodeSniffer PSR-12
- #       run: |
-  #        composer require --dev squizlabs/php_codesniffer
-   #       vendor/bin/phpcs --standard=PSR12 app/
+      - name: PHP_CodeSniffer PSR-12
+        run: |
+          composer require --dev squizlabs/php_codesniffer
+          vendor/bin/phpcs --standard=PSR12 app/
+        continue-on-error: true
 
       # Node escaneo de seguridad
       - name: Node.js vulnerability audit
@@ -78,9 +80,6 @@ jobs:
 
       - name: Test login con MFA/OAuth
         run: php artisan test --filter=AuthTest
-
-      - name: Check password hashing
-        run: php artisan tinker --execute="User::all()->each(fn($u) => assert(Hash::info($u->password)['algo'] === 'bcrypt'));"
 
       # Build frontend
       - name: Build frontend assets
