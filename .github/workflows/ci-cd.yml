@@ -53,8 +53,9 @@ jobs:
         run: php artisan key:generate
 
       # Correr Laravel tests
-     # - name: Run Laravel automated tests
-    #    run: php artisan test || true
+      - name: Run Laravel automated tests
+        run: php artisan test
+        continue-on-error: true
 
       # Analisis estatico y calidad del codigo
    #   - name: PHPStan Static Analysis
@@ -70,6 +71,16 @@ jobs:
       # Node escaneo de seguridad
       - name: Node.js vulnerability audit
         run: npm install && npm audit --audit-level=high || true
+
+      # pruebas de manejo de credenciales
+      - name: Test RBAC
+        run: php artisan test --filter=RBACTest
+
+      - name: Test login con MFA/OAuth
+        run: php artisan test --filter=AuthTest
+
+      - name: Check password hashing
+        run: php artisan tinker --execute="User::all()->each(fn($u) => assert(Hash::info($u->password)['algo'] === 'bcrypt'));"
 
       # Build frontend
       - name: Build frontend assets
