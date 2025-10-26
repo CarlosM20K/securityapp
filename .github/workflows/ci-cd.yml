@@ -1,4 +1,4 @@
-name: Bagisto CI/CD
+name: Bagisto Security CI/CD
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-test:
+  security-check:
     runs-on: ubuntu-latest
 
     services:
@@ -25,40 +25,52 @@ jobs:
           --health-retries 3
 
     steps:
+      # 1️⃣ Checkout
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2️⃣ Set up PHP
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
           extensions: mbstring, bcmath, zip, curl, xml, gd, intl, mysql
 
+      # 3️⃣ Set up Node
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
+      # 4️⃣ Install PHP dependencies
       - name: Install Composer dependencies
         run: composer install --no-progress --no-suggest --prefer-dist
 
+      # 5️⃣ Generate .env
       - name: Copy .env
         run: cp .env.example .env
-
-      - name: Generate app key
+      - name: Generate Laravel key
         run: php artisan key:generate
 
-      - name: Run Laravel tests
+      # 6️⃣ Run Laravel tests
+      - name: Run Laravel automated tests
         run: php artisan test
 
-      - name: Install Node dependencies
-        run: npm install
-
-      - name: Build frontend
-        run: npm run build
-
-      - name: Security Scan (PHPStan + npm audit)
+      # 7️⃣ Static analysis & code quality
+      - name: PHPStan Static Analysis
         run: |
           composer require --dev phpstan/phpstan
-          vendor/bin/phpstan analyse
-          npm audit --audit-level=high || true
+          vendor/bin/phpstan analyse -l max
+
+      - name: PHP_CodeSniffer PSR-12
+        run: |
+          composer require --dev squizlabs/php_codesniffer
+          vendor/bin/phpcs --standard=PSR12 app/
+
+      # 8️⃣ Node security scan
+      - name: Node.js vulnerability audit
+        run: npm install && npm audit --audit-level=high || true
+
+      # 9️⃣ Build frontend
+      - name: Build frontend assets
+        run: npm run build
