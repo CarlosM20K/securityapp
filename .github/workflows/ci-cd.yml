@@ -68,12 +68,12 @@ jobs:
    #       vendor/bin/phpcs --standard=PSR12 app/
 
       # Node escaneo de seguridad
- #    - name: Node.js vulnerability audit
-  #      run: npm install && npm audit --audit-level=high || true
+     - name: Node.js vulnerability audit
+        run: npm install && npm audit --audit-level=high || true
 
       # Build frontend
-#      - name: Build frontend assets
- #       run: npm run build
+      - name: Build frontend assets
+        run: npm run build
       # Reporte de resultados
       - name: Crear reporte CI de seguridad
         run: |
