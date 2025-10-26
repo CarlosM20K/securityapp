@@ -1,4 +1,4 @@
-name: Bagisto Pipeline de seguridad CI/CD
+name: Pipeline de seguridad CI/CD
 
 on:
   push:
