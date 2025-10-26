@@ -83,7 +83,7 @@ jobs:
           echo "Se ejecutaron pruebas automatizadas, análisis estático y auditoría de dependencias." >> reporte.md
 
       - name: Subir reporte como artefacto
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: reporte-seguridad
           path: reporte.md
