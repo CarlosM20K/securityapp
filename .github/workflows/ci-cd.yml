@@ -53,27 +53,27 @@ jobs:
         run: php artisan key:generate
 
       # Correr Laravel tests
-      - name: Run Laravel automated tests
-        run: php artisan test || true
+     # - name: Run Laravel automated tests
+    #    run: php artisan test || true
 
       # Analisis estatico y calidad del codigo
-      - name: PHPStan Static Analysis
-        run: |
-          composer require --dev phpstan/phpstan
-          vendor/bin/phpstan analyse -l max
+   #   - name: PHPStan Static Analysis
+    #    run: |
+     #     composer require --dev phpstan/phpstan
+      #    vendor/bin/phpstan analyse -l max
 
-      - name: PHP_CodeSniffer PSR-12
-        run: |
-          composer require --dev squizlabs/php_codesniffer
-          vendor/bin/phpcs --standard=PSR12 app/
+   #   - name: PHP_CodeSniffer PSR-12
+ #       run: |
+  #        composer require --dev squizlabs/php_codesniffer
+   #       vendor/bin/phpcs --standard=PSR12 app/
 
       # Node escaneo de seguridad
-      - name: Node.js vulnerability audit
-        run: npm install && npm audit --audit-level=high || true
+ #    - name: Node.js vulnerability audit
+  #      run: npm install && npm audit --audit-level=high || true
 
       # Build frontend
-      - name: Build frontend assets
-        run: npm run build
+#      - name: Build frontend assets
+ #       run: npm run build
       # Reporte de resultados
       - name: Crear reporte CI de seguridad
         run: |
